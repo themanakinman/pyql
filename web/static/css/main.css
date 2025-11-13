@@ -104,8 +104,8 @@ body {
     border: none;
     border-radius: 50px;
     background: #b1b1b1;
-    color: #FFF;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     outline: none;
 }
@@ -116,8 +116,7 @@ body {
 }
 
 .oval-input::placeholder {
-    color: #ffffff;
-    opacity: 0.6;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .search-btn {
@@ -127,8 +126,8 @@ body {
     transform: translateY(-50%);
     background: white;
     border: none;
-    width: 44px;
-    height: 44px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     color: #858585;
     cursor: pointer;
@@ -139,7 +138,10 @@ body {
 }
 
 .search-btn:hover {
-    transform: translateY(-50%) scale(1.05);
+    color: white;
+    background-color: green;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
 }
 
 .search-btn:active {
@@ -173,14 +175,14 @@ body {
 
 .action-btn:hover {
     background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(213, 213, 213, 0.2);
     transform: translateY(-2px);
 }
 
 .action-btn.active {
-    background: rgba(255, 255, 255, 0.4);
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgb(255, 255, 255, .5);
+    border-color: rgba(186, 186, 186, 0.6);
+    box-shadow: 0 1px 40px rgba(255, 255, 255, 0.22);
 }
 
 /* ========================================

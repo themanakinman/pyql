@@ -15,31 +15,31 @@ let ACTIONS = {};
 document.addEventListener('DOMContentLoaded', function() {
     ACTIONS = {
         load: {
-            placeholder: 'data/database.csv',
+            placeholder: 'data/rappers.csv',
             description: 'Load a CSV file',
             validator: validateLoadInput,
             executor: executeLoad
         },
         filter: {
-            placeholder: 'df[Population] > 1000000 & df[Continent] == Asia',
+            placeholder: 'df[artist] == Mobb Deep & df[id] > 3',
             description: 'Filter rows by condition',
             validator: validateFilterInput,
             executor: executeFilter
         },
         select: {
-            placeholder: 'df[Column1, Column2, Column3]',
+            placeholder: 'df[title, artist, points]',
             description: 'Select specific columns',
             validator: validateSelectionInput,
             executor: executeSelection
         },
         aggregate: {
-            placeholder: 'df.sum(Population)',
+            placeholder: 'df.sum(points)',
             description: 'Calculate aggregate (sum, mean, max, etc.)',
             validator: validateAggregateInput,
             executor: executeAggregate
         },
         groupby: {
-            placeholder: 'df.groupby(Continent).sum(Population)',
+            placeholder: 'df.groupby(artist).sum(points)',
             description: 'Group and aggregate data',
             validator: validateGroupByInput,
             executor: executeGroupBy
