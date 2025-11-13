@@ -1,0 +1,122 @@
+/* ========================================
+   DATA CARD & STATS STYLES
+   ======================================== */
+
+/* Data Card Container */
+.data-card {
+    background: #303030;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Data Header */
+.data-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-header h3 {
+    color: #FFF;
+    font-size: 18px;
+    margin: 0;
+    font-family: 'Mabry Pro', sans-serif;
+}
+
+.dataset-name {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Mabry Pro', monospace;
+}
+
+/* Data Stats */
+.data-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    color: #FFF;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: #808080;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Data Sections */
+.data-section {
+    padding: 20px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-section h4 {
+    color: #FFF;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Mabry Pro', sans-serif;
+}
+
+/* Column List */
+.column-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.column-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'Mabry Pro', monospace;
+}
+
+/* Column Info Message */
+.column-info {
+    color: #808080;
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Data Actions */
+.data-actions {
+    padding: 20px 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

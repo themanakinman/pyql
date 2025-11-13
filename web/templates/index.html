@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyQL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="center-content">
+            <h1 class="logo">PyQL</h1>
+
+            <div class="search-container">
+                <input type="text" id="query-input" class="oval-input" placeholder="data/database.csv"
+                    autocomplete="off">
+                <button class="search-btn" onclick="executeQuery()">
+                    <svg class="search-icon" width="25" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 19V5M5 12l7-7 7 7" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn active" onclick="selectAction('load')">load</button>
+                <button class="action-btn" onclick="selectAction('filter')">filter</button>
+                <button class="action-btn" onclick="selectAction('select')">select</button>
+                <button class="action-btn" onclick="selectAction('aggregate')">aggregate</button>
+                <button class="action-btn" onclick="selectAction('groupby')">groupby</button>
+                <button class="action-btn" onclick="selectAction('join')">join</button>
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div id="results" class="results-container"></div>
+
+        <!-- Hidden sections -->
+        <div id="sections" class="sections-container"></div>
+    </div>
+
+    <!-- Load JS files in correct order -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/load.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/aggregate.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/groupby.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/join.js') }}"></script>
+</body>
+
+</html>
