@@ -4,10 +4,12 @@
 
 /* Data Card Container */
 .data-card {
-    background: #303030;
+    background: #575757;
     border-radius: 12px;
     padding: 0;
     overflow: hidden;
+    box-shadow: 0 1px 20px rgba(123, 123, 123, 0.10);
+    
 }
 
 /* Data Header */

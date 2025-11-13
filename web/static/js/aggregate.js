@@ -9,13 +9,13 @@ validateAggregateInput = function(input) {
     }
     
     // Parse syntax: df.sum(Column) or df.mean(Column) etc.
-    const aggRegex = /^df\.(sum|mean|max|min|count)\(([^)]+)\)$/;
+    const aggRegex = /^\w*\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(aggRegex);
     
     if (!match) {
         return { 
             valid: false, 
-            error: 'Invalid syntax. Use: df.sum(Column) or df.mean(Column)' 
+            error: 'Invalid syntax. Use: file_name.sum(Column) or file_name.mean(Column)' 
         };
     }
     
@@ -32,20 +32,29 @@ validateAggregateInput = function(input) {
     return { valid: true };
 };
 
+function extractDataframeName(input) {
+    const match = input.match(/^(\w+)\./);
+    return match ? match[1] : 'df';
+}
+
 // Execute aggregate
 executeAggregate = async function(input) {
     showLoading('Calculating aggregate...');
-    
-    // Parse the aggregate command
-    const aggRegex = /^df\.(sum|mean|max|min|count)\(([^)]+)\)$/;
+
+    const aggRegex = /^\w*\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(aggRegex);
     
     if (!match) {
-        showError('Invalid aggregate syntax');
-        return;
+        return { 
+            valid: false, 
+            error: 'Invalid syntax. Use: file_name.sum(Column) or file_name.mean(Column)' 
+        };
     }
     
+    const dfName = extractDataframeName(input);
+    
     const [, func, column] = match;
+    console.log(dfName, column, func)
     
     try {
         const response = await fetch('/api/aggregate-simple', {
@@ -54,7 +63,7 @@ executeAggregate = async function(input) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                dataframe: 'df',
+                dataframe: dfName,
                 column: column,
                 function: func
             })

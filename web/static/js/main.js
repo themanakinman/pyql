@@ -21,31 +21,31 @@ document.addEventListener('DOMContentLoaded', function() {
             executor: executeLoad
         },
         filter: {
-            placeholder: 'df[artist] == Mobb Deep & df[id] > 3',
+            placeholder: 'rappers[artist] == Mobb Deep & rappers[points] > 4',
             description: 'Filter rows by condition',
             validator: validateFilterInput,
             executor: executeFilter
         },
         select: {
-            placeholder: 'df[title, artist, points]',
+            placeholder: 'rappers[title, artist, points]',
             description: 'Select specific columns',
             validator: validateSelectionInput,
             executor: executeSelection
         },
         aggregate: {
-            placeholder: 'df.sum(points)',
+            placeholder: 'rappers.sum(points)',
             description: 'Calculate aggregate (sum, mean, max, etc.)',
             validator: validateAggregateInput,
             executor: executeAggregate
         },
         groupby: {
-            placeholder: 'df.groupby(artist).sum(points)',
+            placeholder: 'rappers.groupby(artist).sum(points)',
             description: 'Group and aggregate data',
             validator: validateGroupByInput,
             executor: executeGroupBy
         },
         join: {
-            placeholder: 'df1.merge(df2, on=CountryCode)',
+            placeholder: 'rappers.merge(polls, on=artist)',
             description: 'Join two dataframes',
             validator: validateJoinInput,
             executor: executeJoin

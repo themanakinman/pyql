@@ -14,20 +14,20 @@ validateFilterInput = function(input) {
         if (!parsed) {
             return { 
                 valid: false, 
-                error: 'Invalid compound filter. Use: df[Column1] > 100 & df[Column2] == "Value"' 
+                error: 'Invalid compound filter. Use: file_mame[Column1] > 100 & file_name[Column2] == "Value"' 
             };
         }
         return { valid: true };
     }
     
     // Single filter validation
-    const filterRegex = /^df\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
+    const filterRegex = /^\w*\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
     const match = input.match(filterRegex);
     
     if (!match) {
         return { 
             valid: false, 
-            error: 'Invalid syntax. Use: df[Column] > 1000' 
+            error: 'Invalid syntax. Use: file_name[Column] > 1000' 
         };
     }
     
@@ -51,6 +51,11 @@ validateFilterInput = function(input) {
     return { valid: true };
 };
 
+function extractDataframeName(input) {
+    const match = input.match(/^(\w+)\[/);
+    return match ? match[1] : 'df';
+}
+
 // Parse compound filter expressions
 function parseCompoundFilter(input) {
     // Determine logic operator (& or |)
@@ -69,7 +74,7 @@ function parseCompoundFilter(input) {
     
     // Parse each filter part
     const filters = [];
-    const filterRegex = /^df\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
+    const filterRegex = /^\w*\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
     
     for (const part of parts) {
         const match = part.trim().match(filterRegex);
@@ -101,6 +106,8 @@ executeFilter = async function(input) {
     
     // Check for compound filter
     const isCompound = input.includes(' & ') || input.includes(' | ');
+
+    const dfName = extractDataframeName(input);
     
     let requestBody;
     
@@ -113,13 +120,13 @@ executeFilter = async function(input) {
         }
         
         requestBody = {
-            dataframe: 'df',
+            dataframe: dfName,
             filters: parsed.filters,
             logic: parsed.logic
         };
     } else {
         // Parse single filter
-        const filterRegex = /^df\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
+        const filterRegex = /\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
         const match = input.match(filterRegex);
         
         if (!match) {
@@ -130,7 +137,7 @@ executeFilter = async function(input) {
         const [, column, operator, value] = match;
         
         requestBody = {
-            dataframe: 'df',
+            dataframe: dfName,
             filters: [{
                 column: column,
                 operator: operator,
@@ -254,7 +261,7 @@ function createDataTable(dataObj) {
     
     // Add note if there are more rows
     if (rowCount > 100) {
-        tableHTML += `<p class="table-note">Showing first 100 of ${rowCount.toLocaleString()} rows</p>`;
+        tableHTML += `<p class="table-note">Displaying a max of 100 out of ${rowCount.toLocaleString()} rows for performance*</p>`;
     }
     
     return tableHTML;

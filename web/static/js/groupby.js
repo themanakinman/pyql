@@ -11,13 +11,13 @@ validateGroupByInput = function(input) {
     // Parse syntax: df.groupby(Column).func(AggColumn)
     // Examples: df.groupby(Continent).sum(Population)
     //           df.groupby(Country).max(GNP)
-    const groupbyRegex = /^df\.groupby\(([^)]+)\)\.(sum|mean|max|min|count)\(([^)]+)\)$/;
+    const groupbyRegex = /^\w*\.groupby\(([^)]+)\)\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(groupbyRegex);
     
     if (!match) {
         return { 
             valid: false, 
-            error: 'Invalid syntax. Use: df.groupby(Column).sum(AggColumn)' 
+            error: 'Invalid syntax. Use: file_name.groupby(Column).sum(AggColumn)' 
         };
     }
     
@@ -41,18 +41,26 @@ validateGroupByInput = function(input) {
     return { valid: true };
 };
 
+function extractDataframeName(input) {
+    const match = input.match(/^(\w+)\./);
+    return match ? match[1] : 'df';
+}
+
 // Execute groupby
 executeGroupBy = async function(input) {
     showLoading('Aggregating data...');
-    
-    // Parse the groupby command
-    const groupbyRegex = /^df\.groupby\(([^)]+)\)\.(sum|mean|max|min|count)\(([^)]+)\)$/;
+
+    const groupbyRegex = /^\w*\.groupby\(([^)]+)\)\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(groupbyRegex);
     
     if (!match) {
-        showError('Invalid groupby syntax');
-        return;
+        return { 
+            valid: false, 
+            error: 'Invalid syntax. Use: file_name.groupby(Column).sum(AggColumn)' 
+        };
     }
+    
+    const dfName = extractDataframeName(input);
     
     const [, groupCol, func, aggCol] = match;
     
@@ -63,7 +71,7 @@ executeGroupBy = async function(input) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                dataframe: 'df',
+                dataframe: dfName,
                 groupby: groupCol,
                 column: aggCol,
                 function: func

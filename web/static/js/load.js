@@ -27,7 +27,7 @@ executeLoad = async function(filepath) {
             },
             body: JSON.stringify({
                 filepath: filepath,
-                name: 'df'
+                name: filepath.split('/').pop().split('.')[0]
             })
         });
         
@@ -50,7 +50,6 @@ executeLoad = async function(filepath) {
     }
 };
 
-// Display data information card - OPTIMIZED
 function displayDataInfo(data) {
     const resultsContainer = document.getElementById('results');
     if (!resultsContainer) return;

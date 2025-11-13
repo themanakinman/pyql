@@ -8,19 +8,18 @@ validateSelectionInput = function(input) {
         return { valid: false, error: 'Please load data first' };
     }
     
-    // Parse syntax: df[Column1, Column2, Column3]
-    const selectionRegex = /^df\[([^\]]+)\]$/;
+    const selectionRegex = /^(\w+)\[([^\]]+)\]$/;
     const match = input.match(selectionRegex);
     
     if (!match) {
         return { 
             valid: false, 
-            error: 'Invalid syntax. Use: df[Column1, Column2, Column3]' 
+            error: 'Invalid syntax. Use: file_name[Column1, Column2, Column3]' 
         };
     }
     
     // Parse columns
-    const columnsStr = match[1];
+    const [, dfName, columnsStr] = match;  // Destructure the match array
     const columns = columnsStr.split(',').map(c => c.trim());
     
     // Validate all columns exist
@@ -37,23 +36,25 @@ validateSelectionInput = function(input) {
         return { valid: false, error: 'Please specify at least one column' };
     }
     
-    return { valid: true };
+     return { 
+        valid: true,
+        dfName,
+        columns
+    };
 };
+
 
 // Execute selection
 executeSelection = async function(input) {
     showLoading('Selecting columns...');
-    
-    // Parse columns from input
-    const match = input.match(/^df\[([^\]]+)\]$/);
-    if (!match) {
-        showError('Invalid selection syntax');
+
+    const validation = validateSelectionInput(input);
+    if (!validation.valid) {
+        showError(validation.error);
         return;
     }
     
-    const columnsStr = match[1];
-    const columns = columnsStr.split(',').map(c => c.trim());
-    
+    const { dfName, columns } = validation
     try {
         const response = await fetch('/api/select', {
             method: 'POST',
@@ -61,7 +62,7 @@ executeSelection = async function(input) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                dataframe: 'df',
+                dataframe: dfName,
                 columns: columns
             })
         });

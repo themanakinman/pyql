@@ -86,6 +86,7 @@ body {
     margin-bottom: 20px;
 }
 
+
 /* ========================================
    SEARCH INPUT
    ======================================== */
@@ -138,14 +139,12 @@ body {
 }
 
 .search-btn:hover {
-    color: white;
-    background-color: green;
-    transition-duration: 0.1s;
-    transition-timing-function: ease-in-out;
+    box-shadow: 0 1px 40px rgba(255, 255, 255, 0.45);
 }
 
 .search-btn:active {
-    transform: translateY(-50%) scale(0.95);
+    color: rgb(193, 193, 193);
+    background-color: rgb(255, 255, 255);
 }
 
 /* ========================================
@@ -311,6 +310,7 @@ body {
     font-family: 'Mabry Pro', monospace;
     font-size: 14px;
     border-left: 3px solid rgba(255, 255, 255, 0.3);
+    
 }
 
 /* ========================================

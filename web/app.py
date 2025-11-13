@@ -14,9 +14,7 @@ loadedDataFrames = {}
 from pyql import DataFrame, compare
 
 
-@app.route('/')
-def index(): # landing
-    return render_template('index.html')
+
 
 def limit_columns(data_dict, max_columns=10):
     """
@@ -55,6 +53,10 @@ def clean_data_for_json(data_dict):
             else:
                 cleaned[column].append(value)
     return cleaned
+
+@app.route('/')
+def index(): # landing
+    return render_template('index.html')
 
 @app.route('/api/load', methods=['POST'])
 def load_data():
@@ -172,33 +174,6 @@ def filter_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/aggregate', methods=['POST'])
-def aggregate_data():
-    try:
-        data = request.get_json()
-        df_name = data.get('dataframe', 'df')
-        group_by = data.get('groupby')
-        agg_column = data.get('column')
-        agg_func = data.get('function')
-        
-        if df_name not in loadedDataFrames:
-            return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404
-        
-        df = loadedDataFrames[df_name]
-        grouped = df.groupby(group_by)
-        result_df = grouped.agg({agg_column: agg_func})
-        
-        return jsonify({
-            'success': True,
-            'rows': len(result_df),
-            'data': result_df.to_dict()
-        })
-    
-    except KeyError as e:
-        return jsonify({'error': f'Column not found: {str(e)}'}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 @app.route('/api/aggregate-simple', methods=['POST'])
 def aggregate_simple():
     """Simple aggregation without grouping"""
@@ -239,6 +214,32 @@ def aggregate_simple():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/aggregate', methods=['POST'])
+def aggregate_data():
+    try:
+        data = request.get_json()
+        df_name = data.get('dataframe', 'df')
+        group_by = data.get('groupby')
+        agg_column = data.get('column')
+        agg_func = data.get('function')
+        
+        if df_name not in loadedDataFrames:
+            return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404
+        
+        df = loadedDataFrames[df_name]
+        grouped = df.groupby(group_by)
+        result_df = grouped.agg({agg_column: agg_func})
+        
+        return jsonify({
+            'success': True,
+            'rows': len(result_df),
+            'data': result_df.to_dict()
+        })
+    
+    except KeyError as e:
+        return jsonify({'error': f'Column not found: {str(e)}'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/join', methods=['POST'])
 def join_data():
@@ -271,7 +272,6 @@ def join_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/select', methods=['POST'])
 def select_columns():
     try:
@@ -296,7 +296,6 @@ def select_columns():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/dataframes', methods=['GET'])
 def list_dataframes():
     return jsonify({
@@ -309,13 +308,11 @@ def list_dataframes():
         }
     })
 
-
 @app.route('/api/clear', methods=['POST'])
 def clear_dataframes():
     global loadedDataFrames
     loadedDataFrames = {}
     return jsonify({'success': True, 'message': 'All DataFrames cleared'})
-
 
 @app.route('/api/info/<df_name>', methods=['GET'])
 def dataframe_info(df_name):
@@ -331,41 +328,6 @@ def dataframe_info(df_name):
         'preview': df.head(5).to_dict()
     })
 
-
-# Test route to check static files
-@app.route('/test-static')
-def test_static():
-    """Test route to verify static files are accessible"""
-    import os
-    static_path = app.static_folder
-    css_exists = os.path.exists(os.path.join(static_path, 'style.css'))
-    js_exists = os.path.exists(os.path.join(static_path, 'main.js'))
-    
-    return f"""
-    <h1>Static Files Test</h1>
-    <p>Static folder: {static_path}</p>
-    <p>style.css exists: {css_exists}</p>
-    <p>main.js exists: {js_exists}</p>
-    <p>CSS URL: {request.url_root}static/style.css</p>
-    <p>JS URL: {request.url_root}static/main.js</p>
-    <hr>
-    <a href="/">Back to main page</a>
-    """
-
-
 if __name__ == '__main__':
-    # Create data directory if it doesn't exist
-    data_dir = os.path.join(os.path.dirname(__file__), '..', 'data')
-    os.makedirs(data_dir, exist_ok=True)
-    
-    print("=" * 60)
-    print("🚀 PyQL Web Server Starting...")
-    print("=" * 60)
-    print(f"📂 Static folder: {app.static_folder}")
-    print(f"📂 Template folder: {app.template_folder}")
-    print(f"📂 Data directory: {os.path.abspath(data_dir)}")
-    print(f"🌐 Server running at: http://localhost:5000")
-    print(f"🧪 Test static files: http://localhost:5000/test-static")
-    print("=" * 60)
-    
+    print(f"Server running at: http://localhost:3000")
     app.run(debug=True, port=3000, host='0.0.0.0')

@@ -15,7 +15,7 @@ validateJoinInput = function(input) {
     if (!match) {
         return { 
             valid: false, 
-            error: 'Invalid syntax. Use: df1.merge(df2, on=Column) or df1.merge(df2, left_on=Col1, right_on=Col2)' 
+            error: 'Invalid syntax. Use: file_name1.merge(file_name2, on=Column) or file_name1.merge(file_name2, left_on=Col1, right_on=Col2)' 
         };
     }
     
@@ -26,13 +26,14 @@ validateJoinInput = function(input) {
 executeJoin = async function(input) {
     showLoading('Joining dataframes...');
     
-    // Parse the join command
     const joinRegex = /^(\w+)\.merge\((\w+),\s*(?:on=(\w+)|left_on=(\w+),\s*right_on=(\w+))(?:,\s*how=(\w+))?\)$/;
     const match = input.match(joinRegex);
     
     if (!match) {
-        showError('Invalid join syntax');
-        return;
+        return { 
+            valid: false, 
+            error: 'Invalid syntax. Use: file_name1.merge(file_name2, on=Column) or file_name1.merge(file_name2, left_on=Col1, right_on=Col2)' 
+        };
     }
     
     const [, leftDf, rightDf, onCol, leftOn, rightOn, how] = match;
@@ -89,7 +90,7 @@ function displayJoinResults(data, query) {
     const totalCols = data.columns.length;
     const displayedCols = Math.min(10, totalCols);
     const columnNote = totalCols > 10
-        ? `<p class="column-info">Showing first ${displayedCols} of ${totalCols} columns</p>`
+        ? `<p class="column-info">Displaying a max of ${displayedCols} out of ${totalCols} columns for performance*</p>`
         : '';
     
     resultsContainer.innerHTML = `
