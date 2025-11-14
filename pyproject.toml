@@ -1,2 +1,0 @@
-app = "web.app:app"
-build = "python3 -m web.app"
