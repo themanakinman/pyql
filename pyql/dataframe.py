@@ -9,10 +9,6 @@ class DataFrame():
     def __init__(self, data=dict(list()), columns=list()):
         """
         init the dataframe object
-        
-        params:
-            data: dict of lists (column-oriented) or list of lists (row-oriented)
-            columns: list of column names (required if data is list of lists)
         """
         self.data = {}
         self.columns = []
@@ -28,14 +24,6 @@ class DataFrame():
     def from_csv(cls, filepath, delimiter=',', columns=None):
         """
         make a dataframe object out of a csv file
-        
-        params:
-            filepath: path to CSV file
-            delimiter: character separating values
-            columns: custom column names (if None, read from file)
-        
-        return:
-            dataframe instance
         """
         parser = CSVParser(filepath, delimiter, columns) # create parser object
         cols, data = parser.read_csv()
@@ -43,9 +31,7 @@ class DataFrame():
     
     def __str__(self):
         """
-        
         return a string version of the dataframe object
-        
         """
         if not self.columns:
             return "No columns found. The dataframe is empty."
@@ -101,3 +87,23 @@ class DataFrame():
             row = [self.data[col][i] for col in self.columns]
             rows.append(row)
         return rows
+
+"""
+aggregation funcs
+"""
+
+"""
+filter funcs
+"""
+
+"""
+join funcs
+"""
+
+"""
+parser funcs
+"""
+
+"""
+selection funcs
+"""

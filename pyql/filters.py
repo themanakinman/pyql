@@ -39,74 +39,11 @@ class BooleanMask:
 class FilterMixin:
     """Mixin for filtering operations"""
     
-    def _filter_by_mask(self, mask):
-        """Filter rows based on boolean mask"""
-        if len(mask) != len(self):
-            raise ValueError("Mask length must match DataFrame length")
-        
-        new_data = {}
-        for col in self.columns:
-            new_data[col] = [self.data[col][i] for i in range(len(mask)) if mask[i]]
-        
-        from .dataframe import DataFrame
-        df = DataFrame.__new__(DataFrame)
-        df.data = new_data
-        df.columns = self.columns[:]
-        return df
-    
-    def filter(self, column, operator, value):
-        """
-        Filter rows based on condition
-        
-        Args:
-            column: column name
-            operator: comparison operator (>, <, ==, !=, >=, <=)
-            value: comparison value
-        
-        Returns:
-            Filtered DataFrame
-        """
-        mask = self._create_mask(column, operator, value)
-        return self[mask]
-    
-    def _create_mask(self, column, operator, value):
-        """Create boolean mask from comparison"""
-        if column not in self.columns:
-            raise KeyError(f"Column '{column}' not found")
-        
-        col_data = self.data[column]
-        mask = []
-        
-        for val in col_data:
-            if operator == '>':
-                mask.append(val > value)
-            elif operator == '>=':
-                mask.append(val >= value)
-            elif operator == '<':
-                mask.append(val < value)
-            elif operator == '<=':
-                mask.append(val <= value)
-            elif operator == '==':
-                mask.append(val == value)
-            elif operator == '!=':
-                mask.append(val != value)
-            else:
-                raise ValueError(f"Unknown operator: {operator}")
-        
-        return BooleanMask(mask)
+
 
 
 def compare(df, column, operator, value):
     """
-    Helper function to create comparison masks
-    
-    Args:
-        df: DataFrame
-        column: column name
-        operator: comparison operator
-        value: comparison value
-    
-    Returns:
-        BooleanMask
+    helper func for booleanMask
     """
     return df._create_mask(column, operator, value)
