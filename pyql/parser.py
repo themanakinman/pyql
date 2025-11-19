@@ -1,8 +1,3 @@
-"""
-CSV Parser Module
-Handles reading and parsing CSV files
-"""
-
 class CSVParser:
     def __init__(self, filepath, delimiter=',', columns=None):
         """
@@ -20,42 +15,41 @@ class CSVParser:
     def parse_line(self, line):
         """Parse a single line into values"""
         values = []
-        current_value = ''
-        in_quotes = False
+        currentVal = ''
+        inQuotes = False
         
         for ch in line:
             if ch == '"':
-                in_quotes = not in_quotes
+                inQuotes = not inQuotes # char is inside quotes
             elif ch == self.delimiter and not in_quotes:
-                values.append(self._convert_type(current_value.strip()))
-                current_value = ''
+                values.append(self._convert_type(currentVal))
+                currentVal = ''
             else:
-                current_value += ch
+                currentVal += ch
         
-        # Add last value
-        values.append(self._convert_type(current_value.strip()))
+        # add the final val
+        values.append(self._convert_type(currentVal.strip()))
         return values
     
     def _convert_type(self, value):
         """Convert string to appropriate type"""
         value = value.strip()
         
-        # Remove quotes
+        # remove quotes if they exist
         if value.startswith('"') and value.endswith('"'):
             value = value[1:-1]
         
-        # Try integer
         try:
             return int(value)
         except ValueError:
             pass
         
-        # Try float
         try:
             return float(value)
         except ValueError:
             pass
         
+        # otherwise return a string
         return value
     
     def read_csv(self):

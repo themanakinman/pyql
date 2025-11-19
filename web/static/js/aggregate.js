@@ -54,7 +54,6 @@ executeAggregate = async function(input) {
     const dfName = extractDataframeName(input);
     
     const [, func, column] = match;
-    console.log(dfName, column, func)
     
     try {
         const response = await fetch('/api/aggregate-simple', {
