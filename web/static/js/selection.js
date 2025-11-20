@@ -27,7 +27,7 @@ validateSelectionInput = function(input) {
         if (!loadedDataFrame.columns.includes(col)) {
             return { 
                 valid: false, 
-                error: `Column "${col}" not found. Available: ${loadedDataFrame.columns.join(', ')}` 
+                error: `Column "${col}" not found. Available: ${loadedDataFrame.columns.join(', ')}'` 
             };
         }
     }

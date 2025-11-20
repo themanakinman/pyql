@@ -13,11 +13,17 @@ class DataFrame():
             if isinstance(data, dict):
                 self.data = {k: list(v) for k, v in data.items()}
                 self.columns = list(data.keys())
-            elif isinstance(data, list): # data is in list format, convert to dict
+            elif isinstance(data, list) and columns is not None: # row oriented data, re-orient
                 self.columns = columns
+                for col in columns:
+                    self.data[col] = []
+                
                 for row in data:
-                    
+                    for i, value in enumerate(row):
+                        if i < len(columns):
+                            self.data[columns[i]].append(value)
             else:
+                raise ValueError("Invalid data format")
     
     @classmethod
     def fromCSV(cls, filepath, delimiter=None, columns=None):
