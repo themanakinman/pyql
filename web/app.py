@@ -322,7 +322,7 @@ def clearDataframes():
 
 @app.route('/api/dataframeInfo/<df_name>', methods=['GET'])
 def dataframeInfo(df_name):
-    """get information about a specific dataframe"""
+    """get info about a specific dataframe"""
     if df_name not in loadedDataFrames:
         return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404
     
@@ -336,5 +336,5 @@ def dataframeInfo(df_name):
     })
 
 if __name__ == '__main__':
-    print(f"Server running at: http://localhost:3000")
+    print(f"running at: http://localhost:3000")
     app.run(debug=True, port=3000, host='0.0.0.0')

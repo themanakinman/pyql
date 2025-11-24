@@ -7,7 +7,9 @@ class DataFrame():
     core dataframe class that stores data in column-oriented format
     """
     def __init__(self, data=dict(list()), columns=list()):
-        """initialize the dataframe object"""
+        """
+        initialize the dataframe object
+        """
         self.data = {}
         self.columns = []
         
@@ -37,7 +39,9 @@ class DataFrame():
         return cls(data=data, columns=cols)
     
     def __str__(self):
-        """return a string representation of the dataframe"""
+        """
+        return a string representation of the dataframe
+        """
         if not self.columns:
             return "No columns found. The dataframe is empty."
         
@@ -60,17 +64,23 @@ class DataFrame():
         return result
     
     def __len__(self):
-        """return number of rows"""
+        """
+        return number of rows
+        """
         if not self.columns:
             return 0
         return len(list(self.data.values())[0])
 
     def shape(self):
-        """return (rows, columns) tuple"""
+        """
+        return (rows, columns) tuple
+        """
         return (len(self), len(self.columns))
     
     def head(self, n=5):
-        """return first n rows"""
+        """
+        return first n rows
+        """
         newData = {}
         for col in self.columns:
             newData[col] = self.data[col][:n]
@@ -81,16 +91,22 @@ class DataFrame():
     """
     
     def copy(self):
-        """return a deep copy of dataframe"""
+        """
+        return a deep copy of dataframe
+        """
         newData = {col: self.data[col][:] for col in self.columns}
         return DataFrame(data=newData)
 
     def toDict(self):
-        """convert dataframe to dictionary"""
+        """
+        convert dataframe to dictionary
+        """
         return {col: self.data[col][:] for col in self.columns}
     
     def toList(self):
-        """convert dataframe to list of lists (rows)"""
+        """
+        convert dataframe to list of lists (rows)
+        """
         rows = []
         for i in range(len(self)):
             row = [self.data[col][i] for col in self.columns]
@@ -144,8 +160,7 @@ class DataFrame():
     
     def groupBy(self, byColumn):
         """
-        group dataframe by column
-        
+        group dataframe by column        
         """
         if byColumn not in self.columns:
             raise KeyError(f"Column '{byColumn}' not found")
@@ -244,7 +259,6 @@ class DataFrame():
     def select(self, *columns):
         """
         select specific columns
-
         """
         return self[list(columns)]
     
@@ -297,33 +311,32 @@ class DataFrame():
             raise ValueError(f"Unknown join type: {how}")
     
     def _innerJoin(self, other, leftOn, rightOn):
-        """inner join - only matching rows"""
-        # build index for right dataframe
+        """
+        inner join - only matching rows
+        """
+        # build index for right dataframe fuirst
         rightIndex = {}
         for i, value in enumerate(other.data[rightOn]):
             if value not in rightIndex:
                 rightIndex[value] = []
             rightIndex[value].append(i)
         
-        # build result
         resultData = {col: [] for col in self.columns}
         
-        # add columns from right (avoid duplicates)
+        # add columns from right (no dupes)
         for col in other.columns:
             if col not in resultData:
                 resultData[col] = []
         
         resultColumns = self.columns + [col for col in other.columns if col not in self.columns]
         
-        # perform join
+        # join dat
         for i, leftValue in enumerate(self.data[leftOn]):
             if leftValue in rightIndex:
                 for j in rightIndex[leftValue]:
-                    # add left row
                     for col in self.columns:
                         resultData[col].append(self.data[col][i])
                     
-                    # add right row
                     for col in other.columns:
                         if col not in self.columns:
                             resultData[col].append(other.data[col][j])
@@ -334,7 +347,9 @@ class DataFrame():
         return df
     
     def _leftJoin(self, other, leftOn, rightOn):
-        """left join - all left rows, matching right rows"""
+        """
+        left join - all left rows, matching right rows
+        """
         rightIndex = {}
         for i, value in enumerate(other.data[rightOn]):
             if value not in rightIndex:
@@ -370,15 +385,17 @@ class DataFrame():
         return df
     
     def _rightJoin(self, other, leftOn, rightOn):
-        """right join - swap and do left join"""
+        """
+        right join - swap and do left join
+        """
         return other._leftJoin(self, rightOn, leftOn)
     
     def _outerJoin(self, other, leftOn, rightOn):
-        """outer join - all rows from both"""
-        # do left join first
+        """
+        outer join - all rows from both
+        """
         leftResult = self._leftJoin(other, leftOn, rightOn)
         
-        # find right rows not in left
         leftValues = set(self.data[leftOn])
         rightOnlyIndices = [
             i for i, val in enumerate(other.data[rightOn])
