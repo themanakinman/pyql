@@ -1,26 +1,22 @@
-// ========================================
-// FILTER ACTION - Data Filtering
-// ========================================
 
-// Override validation from main.js
 validateFilterInput = function(input) {
     if (!loadedDataFrame) {
         return { valid: false, error: 'Please load data first' };
     }
     
-    // Check for compound filters (with & or |)
+    // check for compound filters (with & or |)
     if (input.includes(' & ') || input.includes(' | ')) {
         const parsed = parseCompoundFilter(input);
         if (!parsed) {
             return { 
                 valid: false, 
-                error: 'Invalid compound filter. Use: file_mame[Column1] > 100 & file_name[Column2] == "Value"' 
+                error: 'Invalid compound filter. Use: file_name[Column1] > 100 & file_name[Column2] == "Value"' 
             };
         }
         return { valid: true };
     }
     
-    // Single filter validation
+    // single filter validation
     const filterRegex = /^\w*\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
     const match = input.match(filterRegex);
     
@@ -53,12 +49,11 @@ validateFilterInput = function(input) {
 
 function extractDataframeName(input) {
     const match = input.match(/^(\w+)\[/);
-    return match ? match[1] : 'df';
+    return match ? match[1] : loadedDataFrame.name;
 }
 
-// Parse compound filter expressions
 function parseCompoundFilter(input) {
-    // Determine logic operator (& or |)
+    // determine logic operator (& or |)
     let logicOp = 'and';
     let parts = [];
     
@@ -72,7 +67,7 @@ function parseCompoundFilter(input) {
         return null;
     }
     
-    // Parse each filter part
+    // parse each filter part
     const filters = [];
     const filterRegex = /^\w*\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
     
@@ -82,7 +77,7 @@ function parseCompoundFilter(input) {
         
         const [, column, operator, value] = match;
         
-        // Validate column exists
+        // validate column exists
         if (!loadedDataFrame.columns.includes(column)) {
             return null;
         }
@@ -100,11 +95,10 @@ function parseCompoundFilter(input) {
     };
 }
 
-// Override execution from main.js
 executeFilter = async function(input) {
     showLoading('Filtering data...');
     
-    // Check for compound filter
+    // check for compound filter
     const isCompound = input.includes(' & ') || input.includes(' | ');
 
     const dfName = extractDataframeName(input);
@@ -112,7 +106,7 @@ executeFilter = async function(input) {
     let requestBody;
     
     if (isCompound) {
-        // Parse compound filter
+        // parse compound filter
         const parsed = parseCompoundFilter(input);
         if (!parsed) {
             showError('Invalid compound filter syntax');
@@ -125,7 +119,7 @@ executeFilter = async function(input) {
             logic: parsed.logic
         };
     } else {
-        // Parse single filter
+        // parse single filter
         const filterRegex = /\[([^\]]+)\]\s*([><=!]+)\s*(.+)$/;
         const match = input.match(filterRegex);
         
@@ -148,7 +142,7 @@ executeFilter = async function(input) {
     }
     
     try {
-        const response = await fetch('/api/filter', {
+        const response = await fetch('/api/filterData', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -170,12 +164,11 @@ executeFilter = async function(input) {
     }
 };
 
-// Display filter results
 function displayFilterResults(data, query) {
     const resultsContainer = document.getElementById('results');
     const tableHTML = createDataTable(data.data);
     
-    // Column limitation message
+    // column limitation message
     const totalCols = data.total_columns || 0;
     const displayedCols = data.displayed_columns || Object.keys(data.data).length;
     const columnNote = totalCols > displayedCols
@@ -207,9 +200,6 @@ function displayFilterResults(data, query) {
     `;
 }
 
-
-
-// Create table from data object
 function createDataTable(dataObj) {
     if (!dataObj || Object.keys(dataObj).length === 0) {
         return '<p class="no-data">No results found</p>';
@@ -222,17 +212,17 @@ function createDataTable(dataObj) {
         return '<p class="no-data">No rows match the filter</p>';
     }
     
-    // Start table with container
+    // start table with container
     let tableHTML = '<div class="table-container"><table class="data-table">';
     
-    // Table header
+    // table header
     tableHTML += '<thead><tr>';
     columns.forEach(col => {
         tableHTML += `<th>${escapeHtml(col)}</th>`;
     });
     tableHTML += '</tr></thead>';
     
-    // Table body
+    // table body
     tableHTML += '<tbody>';
     const displayRows = Math.min(rowCount, 100);
     
@@ -245,10 +235,10 @@ function createDataTable(dataObj) {
             if (value === null || value === undefined) {
                 displayValue = '<span class="null-value">null</span>';
             } else if (typeof value === 'number') {
-                // Format numbers nicely
+                // format numbers nicely
                 displayValue = formatNumber(value);
             } else {
-                // Escape HTML and truncate long strings
+                // escape html and truncate long strings
                 displayValue = escapeHtml(String(value));
             }
             
@@ -259,7 +249,7 @@ function createDataTable(dataObj) {
     
     tableHTML += '</tbody></table></div>';
     
-    // Add note if there are more rows
+    // add note if there are more rows
     if (rowCount > 100) {
         tableHTML += `<p class="table-note">Displaying a max of 100 out of ${rowCount.toLocaleString()} rows for performance*</p>`;
     }
@@ -273,12 +263,11 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Helper: Format numbers nicely
 function formatNumber(num) {
     if (Number.isInteger(num)) {
         return num.toLocaleString();
     } else {
-        // Round to 2 decimal places for floats
+        // round to 2 decimal places for floats
         return num.toLocaleString(undefined, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 2

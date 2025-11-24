@@ -4,7 +4,7 @@ class CSVParser:
         init the csv parser
         """
         self.filepath = filepath
-        self.delimiter = delimiter
+        self.delimiter = delimiter if delimiter is not None else ','
         self.columns = columns
     
     def _parseLine(self, line):

@@ -1,8 +1,5 @@
-/* ========================================
-   DATA CARD & STATS STYLES
-   ======================================== */
 
-/* Data Card Container */
+
 .data-card {
     background: #575757;
     border-radius: 12px;
@@ -12,7 +9,6 @@
     
 }
 
-/* Data Header */
 .data-header {
     background: rgba(255, 255, 255, 0.05);
     padding: 20px 30px;
@@ -71,7 +67,6 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Data Sections */
 .data-section {
     padding: 20px 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -86,7 +81,6 @@
     font-family: 'Mabry Pro', sans-serif;
 }
 
-/* Column List */
 .column-list {
     display: flex;
     flex-wrap: wrap;
@@ -102,7 +96,6 @@
     font-family: 'Mabry Pro', monospace;
 }
 
-/* Column Info Message */
 .column-info {
     color: #808080;
     font-size: 13px;
@@ -114,7 +107,6 @@
     border-left: 3px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Data Actions */
 .data-actions {
     padding: 20px 30px;
     display: flex;

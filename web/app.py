@@ -14,7 +14,7 @@ loadedDataFrames = {}
 from pyql import DataFrame, compare
 
 
-def limit_columns(data_dict, max_columns=10):
+def limitColumns(data_dict, max_columns=10):
     """
     limit the number of columns returned
     
@@ -36,7 +36,7 @@ def limit_columns(data_dict, max_columns=10):
     
     return limited_data, total_columns
 
-def clean_data_for_json(data_dict):
+def cleanDataForJson(data_dict):
     """replace inf, -inf, and nan with none for valid json"""
     cleaned = {}
     for column, values in data_dict.items():
@@ -57,8 +57,8 @@ def index():
     """landing page"""
     return render_template('index.html')
 
-@app.route('/api/load', methods=['POST'])
-def load_data():
+@app.route('/api/loadData', methods=['POST'])
+def loadData():
     """load csv file into dataframe"""
     try:
         data = request.get_json()
@@ -77,15 +77,15 @@ def load_data():
         
         # get preview and limit columns
         preview_full = df.head(10).toDict()
-        preview_cleaned = clean_data_for_json(preview_full)
-        preview_limited, total_cols = limit_columns(preview_cleaned, max_columns=10)
+        preview_cleaned = cleanDataForJson(preview_full)
+        preview_limited, total_cols = limitColumns(preview_cleaned, max_columns=10)
         
         return jsonify({
             'success': True,
             'name': name,
             'rows': len(df),
-            'columns': df.columns[:10],  # return only first 10 column names
-            'total_columns': len(df.columns),  # total column count
+            'columns': df.columns[:10],
+            'total_columns': len(df.columns),
             'preview': preview_limited
         })
     
@@ -94,8 +94,8 @@ def load_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/filter', methods=['POST'])
-def filter_data():
+@app.route('/api/filterData', methods=['POST'])
+def filterData():
     """filter dataframe based on conditions"""
     try:
         data = request.get_json()
@@ -159,8 +159,8 @@ def filter_data():
         
         # clean and limit columns
         result_dict = result_df.toDict()
-        result_cleaned = clean_data_for_json(result_dict)
-        result_limited, total_cols = limit_columns(result_cleaned, max_columns=10)
+        result_cleaned = cleanDataForJson(result_dict)
+        result_limited, total_cols = limitColumns(result_cleaned, max_columns=10)
         
         return jsonify({
             'success': True,
@@ -175,8 +175,8 @@ def filter_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/aggregate-simple', methods=['POST'])
-def aggregate_simple():
+@app.route('/api/aggregateSimple', methods=['POST'])
+def aggregateSimple():
     """simple aggregation without grouping"""
     try:
         data = request.get_json()
@@ -215,8 +215,8 @@ def aggregate_simple():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/aggregate', methods=['POST'])
-def aggregate_data():
+@app.route('/api/aggregateData', methods=['POST'])
+def aggregateData():
     """grouped aggregation"""
     try:
         data = request.get_json()
@@ -243,8 +243,8 @@ def aggregate_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/join', methods=['POST'])
-def join_data():
+@app.route('/api/joinData', methods=['POST'])
+def joinData():
     """join two dataframes"""
     try:
         data = request.get_json()
@@ -275,8 +275,8 @@ def join_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/select', methods=['POST'])
-def select_columns():
+@app.route('/api/selectColumns', methods=['POST'])
+def selectColumns():
     """select specific columns from dataframe"""
     try:
         data = request.get_json()
@@ -300,8 +300,8 @@ def select_columns():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/dataframes', methods=['GET'])
-def list_dataframes():
+@app.route('/api/listDataframes', methods=['GET'])
+def listDataframes():
     """list all loaded dataframes"""
     return jsonify({
         'dataframes': {
@@ -313,15 +313,15 @@ def list_dataframes():
         }
     })
 
-@app.route('/api/clear', methods=['POST'])
-def clear_dataframes():
+@app.route('/api/clearDataframes', methods=['POST'])
+def clearDataframes():
     """clear all loaded dataframes"""
     global loadedDataFrames
     loadedDataFrames = {}
     return jsonify({'success': True, 'message': 'All DataFrames cleared'})
 
-@app.route('/api/info/<df_name>', methods=['GET'])
-def dataframe_info(df_name):
+@app.route('/api/dataframeInfo/<df_name>', methods=['GET'])
+def dataframeInfo(df_name):
     """get information about a specific dataframe"""
     if df_name not in loadedDataFrames:
         return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404

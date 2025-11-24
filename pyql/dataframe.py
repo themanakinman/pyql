@@ -1,4 +1,6 @@
 from .parser import CSVParser
+from .boolean_mask import BooleanMask
+from .group_by import GroupBy
 
 class DataFrame():
     """
@@ -148,7 +150,6 @@ class DataFrame():
         if byColumn not in self.columns:
             raise KeyError(f"Column '{byColumn}' not found")
         
-        from .group_by import GroupBy
         return GroupBy(self, byColumn)
     
     """
@@ -204,7 +205,6 @@ class DataFrame():
             else:
                 raise ValueError(f"Unknown operator: {operator}")
         
-        from .boolean_mask import BooleanMask
         return BooleanMask(mask)
     
     """
@@ -218,8 +218,6 @@ class DataFrame():
         - df[['col1', 'col2']] -> dataframe
         - df[booleanmask] -> filtered dataframe
         """
-        from .boolean_mask import BooleanMask
-        
         if isinstance(key, str): # single column
             if key not in self.columns:
                 raise KeyError(f"Column '{key}' not found")

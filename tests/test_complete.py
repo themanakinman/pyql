@@ -1,7 +1,7 @@
 from pyql.filters import FilterMixin
 from pyql.dataframe import DataFrame
 
-# Create a test DataFrame
+# test DataFrame
 data = {
     'name': ['Alice', 'Bob', 'Charlie', 'David'],
     'age': [25, 30, 35, 40],

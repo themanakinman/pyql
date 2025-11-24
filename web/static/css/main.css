@@ -1,8 +1,4 @@
-/* ========================================
-   BASE STYLES & LAYOUT
-   ======================================== */
 
-/* Custom Font */
 @font-face {
     font-family: 'Mabry Pro';
     src: url('../fonts/MabryPro-Regular.ttf');
@@ -11,14 +7,14 @@
     font-display: swap;
 }
 
-/* Reset */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body & Main Container */
+
 body {
     font-family: 'Mabry Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #AEAEAE;
@@ -39,10 +35,6 @@ body {
     text-align: center;
     animation: fadeIn 0.6s ease-in;
 }
-
-/* ========================================
-   ANIMATIONS
-   ======================================== */
 
 @keyframes fadeIn {
     from {
@@ -74,10 +66,6 @@ body {
     }
 }
 
-/* ========================================
-   LOGO
-   ======================================== */
-
 .logo {
     font-family: 'Mabry Pro';
     font-size: 10vw;
@@ -86,10 +74,6 @@ body {
     margin-bottom: 20px;
 }
 
-
-/* ========================================
-   SEARCH INPUT
-   ======================================== */
 
 .search-container {
     position: relative;
@@ -147,10 +131,6 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
-/* ========================================
-   ACTION BUTTONS
-   ======================================== */
-
 .quick-actions {
     display: flex;
     gap: 12px;
@@ -183,10 +163,6 @@ body {
     border-color: rgba(186, 186, 186, 0.6);
     box-shadow: 0 1px 40px rgba(255, 255, 255, 0.22);
 }
-
-/* ========================================
-   PRIMARY & SECONDARY BUTTONS
-   ======================================== */
 
 .primary-btn,
 .secondary-btn {
@@ -221,10 +197,6 @@ body {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* ========================================
-   RESULTS CONTAINER
-   ======================================== */
-
 .results-container {
     margin-top: 40px;
     display: none;
@@ -244,10 +216,6 @@ body {
     display: block;
     animation: slideUp 0.4s ease;
 }
-
-/* ========================================
-   LOADING SPINNER
-   ======================================== */
 
 .loading {
     text-align: center;
@@ -271,10 +239,6 @@ body {
     font-size: 16px;
 }
 
-/* ========================================
-   ERROR CARD
-   ======================================== */
-
 .error-card {
     text-align: center;
     padding: 40px;
@@ -297,10 +261,6 @@ body {
     margin-bottom: 24px;
 }
 
-/* ========================================
-   QUERY DISPLAY
-   ======================================== */
-
 .query-display {
     display: block;
     background: rgba(255, 255, 255, 0.05);
@@ -312,10 +272,6 @@ body {
     border-left: 3px solid rgba(255, 255, 255, 0.3);
     
 }
-
-/* ========================================
-   RESPONSIVE
-   ======================================== */
 
 @media (max-width: 768px) {
     .logo {

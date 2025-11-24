@@ -34,14 +34,5 @@ class BooleanMask:
 def compare(df, column, operator, value):
     """
     helper function to create comparison masks
-    
-    args:
-        df: dataframe
-        column: column name
-        operator: comparison operator
-        value: comparison value
-    
-    returns:
-        booleanmask
     """
     return df._createMask(column, operator, value)

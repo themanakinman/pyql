@@ -1,14 +1,10 @@
-// ========================================
-// JOIN ACTION - Merge DataFrames
-// ========================================
 
-// Validate join input
 validateJoinInput = function(input) {
     if (!loadedDataFrame) {
         return { valid: false, error: 'Please load data first' };
     }
     
-    // Parse syntax: df1.merge(df2, on=Column) or df1.merge(df2, left_on=Col1, right_on=Col2)
+    // parse syntax: df1.merge(df2, on=Column) or df1.merge(df2, left_on=Col1, right_on=Col2)
     const joinRegex = /^(\w+)\.merge\((\w+),\s*(?:on=(\w+)|left_on=(\w+),\s*right_on=(\w+))(?:,\s*how=(\w+))?\)$/;
     const match = input.match(joinRegex);
     
@@ -22,7 +18,6 @@ validateJoinInput = function(input) {
     return { valid: true };
 };
 
-// Execute join
 executeJoin = async function(input) {
     showLoading('Joining dataframes...');
     
@@ -38,7 +33,7 @@ executeJoin = async function(input) {
     
     const [, leftDf, rightDf, onCol, leftOn, rightOn, how] = match;
     
-    // Determine join columns
+    // determine join columns
     const joinParams = {
         left: leftDf,
         right: rightDf,
@@ -46,17 +41,17 @@ executeJoin = async function(input) {
     };
     
     if (onCol) {
-        // Same column name in both DataFrames
+        // same column name in both dataframes
         joinParams.left_on = onCol;
         joinParams.right_on = onCol;
     } else {
-        // Different column names
+        // different column names
         joinParams.left_on = leftOn;
         joinParams.right_on = rightOn;
     }
     
     try {
-        const response = await fetch('/api/join', {
+        const response = await fetch('/api/joinData', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +73,6 @@ executeJoin = async function(input) {
     }
 };
 
-// Display join results
 function displayJoinResults(data, query) {
     const resultsContainer = document.getElementById('results');
     const tableHTML = createDataTable(data.data);
