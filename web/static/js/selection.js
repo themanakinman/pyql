@@ -1,8 +1,3 @@
-// ========================================
-// SELECTION ACTION - Column Projection
-// ========================================
-
-// Validate selection input
 validateSelectionInput = function(input) {
     if (!loadedDataFrame) {
         return { valid: false, error: 'Please load data first' };
@@ -18,16 +13,16 @@ validateSelectionInput = function(input) {
         };
     }
     
-    // Parse columns
-    const [, dfName, columnsStr] = match;  // Destructure the match array
+    // parse columns
+    const [, dfName, columnsStr] = match;
     const columns = columnsStr.split(',').map(c => c.trim());
     
-    // Validate all columns exist
+    // validate all columns exist
     for (const col of columns) {
         if (!loadedDataFrame.columns.includes(col)) {
             return { 
                 valid: false, 
-                error: `Column "${col}" not found. Available: ${loadedDataFrame.columns.join(', ')}` 
+                error: `Column "${col}" not found. Available: ${loadedDataFrame.columns.join(', ')}'` 
             };
         }
     }
@@ -43,8 +38,6 @@ validateSelectionInput = function(input) {
     };
 };
 
-
-// Execute selection
 executeSelection = async function(input) {
     showLoading('Selecting columns...');
 
@@ -56,7 +49,7 @@ executeSelection = async function(input) {
     
     const { dfName, columns } = validation
     try {
-        const response = await fetch('/api/select', {
+        const response = await fetch('/api/selectColumns', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +74,6 @@ executeSelection = async function(input) {
     }
 };
 
-// Display selection results
 function displaySelectionResults(data, columns) {
     const resultsContainer = document.getElementById('results');
     const tableHTML = createDataTable(data.data);

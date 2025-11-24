@@ -1,14 +1,9 @@
-// ========================================
-// AGGREGATE ACTION - Simple Aggregation
-// ========================================
-
-// Validate aggregate input
 validateAggregateInput = function(input) {
     if (!loadedDataFrame) {
         return { valid: false, error: 'Please load data first' };
     }
     
-    // Parse syntax: df.sum(Column) or df.mean(Column) etc.
+    // parse syntax: df.sum(Column) or df.mean(Column) etc.
     const aggRegex = /^\w*\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(aggRegex);
     
@@ -21,7 +16,7 @@ validateAggregateInput = function(input) {
     
     const [, func, column] = match;
     
-    // Validate column exists
+    // validate column exists
     if (!loadedDataFrame.columns.includes(column)) {
         return { 
             valid: false, 
@@ -34,10 +29,9 @@ validateAggregateInput = function(input) {
 
 function extractDataframeName(input) {
     const match = input.match(/^(\w+)\./);
-    return match ? match[1] : 'df';
+    return match ? match[1] : loadedDataFrame.name;
 }
 
-// Execute aggregate
 executeAggregate = async function(input) {
     showLoading('Calculating aggregate...');
 
@@ -54,10 +48,9 @@ executeAggregate = async function(input) {
     const dfName = extractDataframeName(input);
     
     const [, func, column] = match;
-    console.log(dfName, column, func)
     
     try {
-        const response = await fetch('/api/aggregate-simple', {
+        const response = await fetch('/api/aggregateSimple', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +76,6 @@ executeAggregate = async function(input) {
     }
 };
 
-// Display aggregate result
 function displayAggregateResult(data, column, func) {
     const resultsContainer = document.getElementById('results');
     

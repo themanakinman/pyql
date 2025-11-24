@@ -1,8 +1,3 @@
-// ========================================
-// LOAD ACTION - CSV File Loading
-// ========================================
-
-// Override validation from main.js
 validateLoadInput = function(filepath) {
     if (!filepath || filepath.trim() === '') {
         return { valid: false, error: 'Please enter a file path' };
@@ -15,12 +10,12 @@ validateLoadInput = function(filepath) {
     return { valid: true };
 };
 
-// Override execution from main.js
+
 executeLoad = async function(filepath) {
     showLoading('Loading your data...');
     
     try {
-        const response = await fetch('/api/load', {
+        const response = await fetch('/api/loadData', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,10 +34,10 @@ executeLoad = async function(filepath) {
         
         const data = await response.json();
         
-        // Store loaded dataframe info
+        // store loaded dataframe info
         loadedDataFrame = data;
         
-        // Display success card
+        // display success card
         displayDataInfo(data);
         
     } catch (error) {
@@ -58,15 +53,15 @@ function displayDataInfo(data) {
     const displayedCols = data.columns.length;
     const rowsFormatted = data.rows.toLocaleString();
     
-    // Pre-build column info
+    // pre-build column info
     const columnInfo = totalCols > displayedCols 
         ? `<p class="column-info">Displaying a max of ${displayedCols} out of ${totalCols} columns for performance*</p>`
         : '';
     
-    // Single pass through columns
+    // single pass through columns
     const columnBadges = data.columns.reduce((html, col) => 
         html + `<span class="column-badge">${col}</span>`, '');
     
-    // Single innerHTML assignment (minimal reflow)
+    // single innerHTML assignment (minimal reflow)
     resultsContainer.innerHTML = `<div class="data-card"><div class="data-header"><h3>✓ Data Loaded Successfully</h3><span class="dataset-name">${data.name}</span></div><div class="data-stats"><div class="stat-item"><div class="stat-value">${rowsFormatted}</div><div class="stat-label">Rows</div></div><div class="stat-divider"></div><div class="stat-item"><div class="stat-value">${totalCols}</div><div class="stat-label">Columns</div></div></div><div class="data-section"><h4>Columns (Preview)</h4>${columnInfo}<div class="column-list">${columnBadges}</div></div><div class="data-actions"><button class="secondary-btn" onclick="clearData()">Clear</button></div></div>`;
 }

@@ -1,17 +1,8 @@
-// ========================================
-// STATE MANAGEMENT
-// ========================================
 let currentAction = 'load';
 let loadedDataFrame = null;
 
-console.log('🚀 PyQL main.js loaded');
-
-// Action configurations (will be populated after all scripts load)
 let ACTIONS = {};
 
-// ========================================
-// INITIALIZATION
-// ========================================
 document.addEventListener('DOMContentLoaded', function() {
     ACTIONS = {
         load: {
@@ -62,20 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ========================================
-// ACTION SELECTION
-// ========================================
 function selectAction(action) {
-    console.log(`🎯 Selecting action: ${action}`);
-    
     if (!ACTIONS[action]) {
-        console.error(`❌ Unknown action: ${action}`);
         return;
     }
     
     currentAction = action;
     
-    // Update button styles
+    // update button styles
     document.querySelectorAll('.action-btn').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -83,10 +68,9 @@ function selectAction(action) {
     const activeBtn = document.querySelector(`[onclick="selectAction('${action}')"]`);
     if (activeBtn) {
         activeBtn.classList.add('active');
-        console.log(`✅ Activated ${action} button`);
     }
     
-    // Update input placeholder
+    // update input placeholder
     const input = document.getElementById('query-input');
     if (input) {
         input.placeholder = ACTIONS[action].placeholder;
@@ -95,21 +79,13 @@ function selectAction(action) {
     }
 }
 
-// ========================================
-// QUERY EXECUTION ROUTER
-// ========================================
 async function executeQuery() {
-    console.log('🚀 executeQuery() called');
-    console.log(`Current action: ${currentAction}`);
-    
     const input = document.getElementById('query-input');
     if (!input) {
-        console.error('❌ Input element not found');
         return;
     }
     
     const inputValue = input.value.trim();
-    console.log(`Input value: "${inputValue}"`);
     
     if (!inputValue) {
         showError('Please enter a command');
@@ -117,14 +93,10 @@ async function executeQuery() {
     }
     
     const actionConfig = ACTIONS[currentAction];
-    console.log('Action config:', actionConfig);
-    console.log('Executor function:', actionConfig.executor);
     
-    // Validate input
+    // validate input
     if (actionConfig.validator) {
-        console.log('Validating input...');
         const validation = actionConfig.validator(inputValue);
-        console.log('Validation result:', validation);
         
         if (!validation.valid) {
             showError(validation.error);
@@ -132,24 +104,17 @@ async function executeQuery() {
         }
     }
     
-    // Execute action
+    // execute action
     if (actionConfig.executor) {
-        console.log(`Executing ${currentAction}...`);
         await actionConfig.executor(inputValue);
     } else {
         showError(`${currentAction} is not yet implemented`);
     }
 }
 
-// ========================================
-// UI HELPERS
-// ========================================
 function showLoading(message = 'Processing...') {
-    console.log(`⏳ showLoading: ${message}`);
-    
     const resultsContainer = document.getElementById('results');
     if (!resultsContainer) {
-        console.error('❌ Results container not found');
         return;
     }
     
@@ -160,16 +125,11 @@ function showLoading(message = 'Processing...') {
             <p>${message}</p>
         </div>
     `;
-    
-    console.log('✅ Loading UI displayed');
 }
 
 function showError(message) {
-    console.log(`❌ showError: ${message}`);
-    
     const resultsContainer = document.getElementById('results');
     if (!resultsContainer) {
-        console.error('❌ Results container not found');
         return;
     }
     
@@ -182,13 +142,9 @@ function showError(message) {
             <button class="secondary-btn" onclick="clearResults()">Try Again</button>
         </div>
     `;
-    
-    console.log('✅ Error UI displayed');
 }
 
 function clearResults() {
-    console.log('🧹 Clearing results');
-    
     const resultsContainer = document.getElementById('results');
     if (resultsContainer) {
         resultsContainer.classList.remove('show');
@@ -203,10 +159,8 @@ function clearResults() {
 }
 
 async function clearData() {
-    console.log('🗑️ Clearing data');
-    
     try {
-        const response = await fetch('/api/clear', {
+        const response = await fetch('/api/clearDataframes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -214,28 +168,20 @@ async function clearData() {
         });
         
         const data = await response.json();
-        console.log('Clear response:', data);
         
         loadedDataFrame = null;
         clearResults();
         selectAction('load');
-        
-        console.log('✅ Data cleared successfully');
     } catch (error) {
-        console.error('❌ Error clearing data:', error);
+        // o no
     }
 }
 
-// ========================================
-// VALIDATION PLACEHOLDERS
-// ========================================
 function validateLoadInput(input) {
-    console.log('Validating load input (placeholder):', input);
     return { valid: true };
 }
 
 function validateFilterInput(input) {
-    console.log('Validating filter input (placeholder):', input);
     return { valid: true };
 }
 
@@ -255,15 +201,10 @@ function validateJoinInput(input) {
     return { valid: true };
 }
 
-// ========================================
-// EXECUTION PLACEHOLDERS
-// ========================================
 async function executeLoad(input) {
-    console.log('executeLoad placeholder called');
 }
 
 async function executeFilter(input) {
-    console.log('executeFilter placeholder called');
 }
 
 async function executeSelection(input) {
@@ -273,8 +214,7 @@ async function executeGroupBy(input) {
 }
 
 async function executeAggregate(input) {
-
 }
+
 async function executeJoin(input) {
-    
 }

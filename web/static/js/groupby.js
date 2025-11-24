@@ -1,16 +1,9 @@
-// ========================================
-// GROUPBY ACTION - Data Aggregation
-// ========================================
-
-// Validate groupby input
 validateGroupByInput = function(input) {
     if (!loadedDataFrame) {
         return { valid: false, error: 'Please load data first' };
     }
     
-    // Parse syntax: df.groupby(Column).func(AggColumn)
-    // Examples: df.groupby(Continent).sum(Population)
-    //           df.groupby(Country).max(GNP)
+    // parse syntax: df.groupby(Column).func(AggColumn)
     const groupbyRegex = /^\w*\.groupby\(([^)]+)\)\.(sum|mean|max|min|count)\(([^)]+)\)$/;
     const match = input.match(groupbyRegex);
     
@@ -23,7 +16,7 @@ validateGroupByInput = function(input) {
     
     const [, groupCol, func, aggCol] = match;
     
-    // Validate columns exist
+    // validate columns exist
     if (!loadedDataFrame.columns.includes(groupCol)) {
         return { 
             valid: false, 
@@ -43,10 +36,9 @@ validateGroupByInput = function(input) {
 
 function extractDataframeName(input) {
     const match = input.match(/^(\w+)\./);
-    return match ? match[1] : 'df';
+    return match ? match[1] : loadedDataFrame.name;
 }
 
-// Execute groupby
 executeGroupBy = async function(input) {
     showLoading('Aggregating data...');
 
@@ -65,7 +57,7 @@ executeGroupBy = async function(input) {
     const [, groupCol, func, aggCol] = match;
     
     try {
-        const response = await fetch('/api/aggregate', {
+        const response = await fetch('/api/aggregateData', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +84,6 @@ executeGroupBy = async function(input) {
     }
 };
 
-// Display groupby results
 function displayGroupByResults(data, groupCol, aggCol, func) {
     const resultsContainer = document.getElementById('results');
     const tableHTML = createDataTable(data.data);

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyQL</title>
+    <title>pyql</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -34,14 +34,11 @@
             </div>
         </div>
 
-        <!-- Results Area -->
         <div id="results" class="results-container"></div>
 
-        <!-- Hidden sections -->
         <div id="sections" class="sections-container"></div>
     </div>
 
-    <!-- Load JS files in correct order -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/load.js') }}"></script>
     <script src="{{ url_for('static', filename='js/filter.js') }}"></script>

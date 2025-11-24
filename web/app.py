@@ -14,18 +14,16 @@ loadedDataFrames = {}
 from pyql import DataFrame, compare
 
 
-
-
-def limit_columns(data_dict, max_columns=10):
+def limitColumns(data_dict, max_columns=10):
     """
-    Limit the number of columns returned
+    limit the number of columns returned
     
-    Args:
-        data_dict: Dictionary of column data
-        max_columns: Maximum number of columns to return
+    args:
+        data_dict: dictionary of column data
+        max_columns: maximum number of columns to return
     
-    Returns:
-        Tuple of (limited_data, total_column_count)
+    returns:
+        tuple of (limited_data, total_column_count)
     """
     all_columns = list(data_dict.keys())
     total_columns = len(all_columns)
@@ -33,18 +31,18 @@ def limit_columns(data_dict, max_columns=10):
     if total_columns <= max_columns:
         return data_dict, total_columns
     
-    # Take first max_columns
+    # take first max_columns
     limited_data = {col: data_dict[col] for col in all_columns[:max_columns]}
     
     return limited_data, total_columns
 
-def clean_data_for_json(data_dict):
-    """Replace inf, -inf, and nan with None for valid JSON"""
+def cleanDataForJson(data_dict):
+    """replace inf, -inf, and nan with none for valid json"""
     cleaned = {}
     for column, values in data_dict.items():
         cleaned[column] = []
         for value in values:
-            # Check if value is a float and handle special cases
+            # check if value is a float and handle special cases
             if isinstance(value, float):
                 if math.isinf(value) or math.isnan(value):
                     cleaned[column].append(None)
@@ -55,11 +53,13 @@ def clean_data_for_json(data_dict):
     return cleaned
 
 @app.route('/')
-def index(): # landing
+def index():
+    """landing page"""
     return render_template('index.html')
 
-@app.route('/api/load', methods=['POST'])
-def load_data():
+@app.route('/api/loadData', methods=['POST'])
+def loadData():
+    """load csv file into dataframe"""
     try:
         data = request.get_json()
         filepath = data.get('filepath')
@@ -72,20 +72,20 @@ def load_data():
             project_root = os.path.abspath(os.path.join(basedir, '..'))
             filepath = os.path.join(project_root, filepath)
         
-        df = DataFrame.from_csv(filepath)
+        df = DataFrame.fromCSV(filepath)
         loadedDataFrames[name] = df
         
-        # Get preview and limit columns
-        preview_full = df.head(10).to_dict()
-        preview_cleaned = clean_data_for_json(preview_full)
-        preview_limited, total_cols = limit_columns(preview_cleaned, max_columns=10)
+        # get preview and limit columns
+        preview_full = df.head(10).toDict()
+        preview_cleaned = cleanDataForJson(preview_full)
+        preview_limited, total_cols = limitColumns(preview_cleaned, max_columns=10)
         
         return jsonify({
             'success': True,
             'name': name,
             'rows': len(df),
-            'columns': df.columns[:10],  # Return only first 10 column names
-            'total_columns': len(df.columns),  # Total column count
+            'columns': df.columns[:10],
+            'total_columns': len(df.columns),
             'preview': preview_limited
         })
     
@@ -94,13 +94,14 @@ def load_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/filter', methods=['POST'])
-def filter_data():
+@app.route('/api/filterData', methods=['POST'])
+def filterData():
+    """filter dataframe based on conditions"""
     try:
         data = request.get_json()
         df_name = data.get('dataframe', 'df')
         
-        # Support both single and multiple filters
+        # support both single and multiple filters
         filters = data.get('filters')
         logic_op = data.get('logic', 'and')
         
@@ -109,7 +110,7 @@ def filter_data():
         
         df = loadedDataFrames[df_name]
         
-        # Handle multiple filters
+        # handle multiple filters
         if isinstance(filters, list) and len(filters) > 0:
             masks = []
             
@@ -118,7 +119,7 @@ def filter_data():
                 operator = f.get('operator')
                 value = f.get('value')
                 
-                # Convert value to appropriate type
+                # convert value to appropriate type
                 try:
                     value = int(value)
                 except ValueError:
@@ -130,7 +131,7 @@ def filter_data():
                 mask = compare(df, column, operator, value)
                 masks.append(mask)
             
-            # Combine masks
+            # combine masks
             combined_mask = masks[0]
             for mask in masks[1:]:
                 if logic_op == 'and':
@@ -140,7 +141,7 @@ def filter_data():
             
             result_df = df[combined_mask]
         else:
-            # Single filter fallback
+            # single filter fallback
             column = data.get('column')
             operator = data.get('operator')
             value = data.get('value')
@@ -156,10 +157,10 @@ def filter_data():
             mask = compare(df, column, operator, value)
             result_df = df[mask]
         
-        # Clean and limit columns
-        result_dict = result_df.to_dict()
-        result_cleaned = clean_data_for_json(result_dict)
-        result_limited, total_cols = limit_columns(result_cleaned, max_columns=10)
+        # clean and limit columns
+        result_dict = result_df.toDict()
+        result_cleaned = cleanDataForJson(result_dict)
+        result_limited, total_cols = limitColumns(result_cleaned, max_columns=10)
         
         return jsonify({
             'success': True,
@@ -174,9 +175,9 @@ def filter_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/aggregate-simple', methods=['POST'])
-def aggregate_simple():
-    """Simple aggregation without grouping"""
+@app.route('/api/aggregateSimple', methods=['POST'])
+def aggregateSimple():
+    """simple aggregation without grouping"""
     try:
         data = request.get_json()
         df_name = data.get('dataframe', 'df')
@@ -191,7 +192,7 @@ def aggregate_simple():
         if column not in df.columns:
             return jsonify({'error': f'Column "{column}" not found'}), 400
         
-        # Perform aggregation
+        # perform aggregation
         if func == 'sum':
             result = df.sum(column)
         elif func == 'mean':
@@ -214,8 +215,9 @@ def aggregate_simple():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/aggregate', methods=['POST'])
-def aggregate_data():
+@app.route('/api/aggregateData', methods=['POST'])
+def aggregateData():
+    """grouped aggregation"""
     try:
         data = request.get_json()
         df_name = data.get('dataframe', 'df')
@@ -227,13 +229,13 @@ def aggregate_data():
             return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404
         
         df = loadedDataFrames[df_name]
-        grouped = df.groupby(group_by)
+        grouped = df.groupBy(group_by)
         result_df = grouped.agg({agg_column: agg_func})
         
         return jsonify({
             'success': True,
             'rows': len(result_df),
-            'data': result_df.to_dict()
+            'data': result_df.toDict()
         })
     
     except KeyError as e:
@@ -241,8 +243,9 @@ def aggregate_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/join', methods=['POST'])
-def join_data():
+@app.route('/api/joinData', methods=['POST'])
+def joinData():
+    """join two dataframes"""
     try:
         data = request.get_json()
         left_df_name = data.get('left')
@@ -258,13 +261,13 @@ def join_data():
         
         left_df = loadedDataFrames[left_df_name]
         right_df = loadedDataFrames[right_df_name]
-        result_df = left_df.merge(right_df, left_on=left_on, right_on=right_on, how=how)
+        result_df = left_df.merge(right_df, leftOn=left_on, rightOn=right_on, how=how)
         
         return jsonify({
             'success': True,
             'rows': len(result_df),
             'columns': result_df.columns,
-            'data': result_df.to_dict()
+            'data': result_df.toDict()
         })
     
     except KeyError as e:
@@ -272,8 +275,9 @@ def join_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/select', methods=['POST'])
-def select_columns():
+@app.route('/api/selectColumns', methods=['POST'])
+def selectColumns():
+    """select specific columns from dataframe"""
     try:
         data = request.get_json()
         df_name = data.get('dataframe', 'df')
@@ -288,7 +292,7 @@ def select_columns():
         return jsonify({
             'success': True,
             'rows': len(result_df),
-            'data': result_df.to_dict()
+            'data': result_df.toDict()
         })
     
     except KeyError as e:
@@ -296,8 +300,9 @@ def select_columns():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/dataframes', methods=['GET'])
-def list_dataframes():
+@app.route('/api/listDataframes', methods=['GET'])
+def listDataframes():
+    """list all loaded dataframes"""
     return jsonify({
         'dataframes': {
             name: {
@@ -308,14 +313,16 @@ def list_dataframes():
         }
     })
 
-@app.route('/api/clear', methods=['POST'])
-def clear_dataframes():
+@app.route('/api/clearDataframes', methods=['POST'])
+def clearDataframes():
+    """clear all loaded dataframes"""
     global loadedDataFrames
     loadedDataFrames = {}
     return jsonify({'success': True, 'message': 'All DataFrames cleared'})
 
-@app.route('/api/info/<df_name>', methods=['GET'])
-def dataframe_info(df_name):
+@app.route('/api/dataframeInfo/<df_name>', methods=['GET'])
+def dataframeInfo(df_name):
+    """get information about a specific dataframe"""
     if df_name not in loadedDataFrames:
         return jsonify({'error': f'DataFrame "{df_name}" not loaded'}), 404
     
@@ -325,7 +332,7 @@ def dataframe_info(df_name):
         'rows': len(df),
         'columns': df.columns,
         'shape': df.shape(),
-        'preview': df.head(5).to_dict()
+        'preview': df.head(5).toDict()
     })
 
 if __name__ == '__main__':
