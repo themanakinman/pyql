@@ -1,3 +1,5 @@
+<img width="786" height="685" alt="CleanShot 2025-12-07 at 15 36 00" src="https://github.com/user-attachments/assets/5805c5a2-eaaf-4169-8c06-c219d38250e8" />
+
 hey there.
 
 this is the readme for pyql, a data analysis web app built with flask and pyql (pandas like dataframe library).
@@ -17,3 +19,5 @@ there's placeholder text in the input box, just replace it with the name of the 
 follow this idea for the other quick actions (that is, look at the placeholder text and replace it with the relevant file name and column/conditions).
 
 enjoi.
+
+
