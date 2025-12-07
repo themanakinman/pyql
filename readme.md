@@ -18,6 +18,8 @@ there's placeholder text in the input box, just replace it with the name of the 
 
 follow this idea for the other quick actions (that is, look at the placeholder text and replace it with the relevant file name and column/conditions).
 
+you can also access the live site here => https://pyql.onrender.com/.
+
 enjoi.
 
 
